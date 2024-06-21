@@ -1,10 +1,10 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
@@ -18,6 +18,12 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void addUser(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("User with that username already exist!");
+        }
+
+        System.out.println(user.getPassword());
+
         userRepository.save(user);
     }
 
@@ -37,6 +43,17 @@ public class UserServiceImp implements UserService {
     @Override
     public User findUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public User findUserByName(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User with username: %s - doesn't exist!", username));
+        }
+        return user;
     }
 
     @Transactional

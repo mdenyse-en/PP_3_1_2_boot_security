@@ -8,8 +8,6 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
-
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -58,7 +56,6 @@ public class AdminController {
 
     @PostMapping(value = "/edit")
     public String editUser(@ModelAttribute("user") User user) {
-        System.out.println(user.getId());
         userService.updateUser(user);
 
         return "redirect:/admin/users";
