@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add user</title>
+    <style>
+        td {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+<h1>Add user:</h1>
+<form th:method="post" th:action="@{/admin/edit}" th:object="${user}" >
+    <table>
+        <input type="hidden" id="id" th:field="*{id}">
+        <tr>
+            <td><label for="firstName">First name:</label></td>
+            <td><input type="text" id="firstName" th:field="*{username}"><br><br></td>
+        </tr>
+        <tr>
+            <td><label for="lastName">Last name:</label></td>
+            <td><input type="text" id="lastName" th:field="*{lastname}"><br><br></td>
+        </tr>
+        <tr>
+            <td><label for="age">Age:</label></td>
+            <td><input type="text" id="age" th:field="*{age}"><br><br></td>
+        <tr>
+            <td>
+                <input type="submit" value="Update">
+            </td>
+        </tr>
+        <label>Roles:
+            <input type="checkbox" name="roles"
+                   th:each="role : ${allRoles}"
+                   th:text="${role.name}"
+                   th:value="${role.id}"
+                   th:field="*{roles}"
+            />
+        </label>
+
+    </table>
+</form>
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="logout"/>
+</form>
+</body>
+</html>
