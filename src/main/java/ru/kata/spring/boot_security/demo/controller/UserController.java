@@ -10,17 +10,21 @@ import java.security.Principal;
 
 @Controller
 public class UserController {
-    @Autowired
-    private UserService userService;
 
-    @GetMapping("/")
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping(value = "/")
     public String getUsers() {
         return "index";
     }
 
     @GetMapping(value = "/user")
     public String showCurrentUser(Principal principal, ModelMap modelMap) {
-        System.out.println(principal.getName());
         modelMap.addAttribute(userService.findUserByName(principal.getName()));
 
         return "user";

@@ -1,37 +1,39 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.annotation.PostConstruct;
+import java.util.HashSet;
 
 @Component
 public class DataBaseInitializer {
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserService userService;
+    private final RoleService roleService;
+
+    private final UserService userService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public DataBaseInitializer(RoleService roleService, UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
     @PostConstruct
     public void initializeUsersAndRoles() {
         roleService.addRole(new Role("ROLE_USER"));
         userService.addUser(new User("user",
-                passwordEncoder.encode("user"),
+                "user",
                 "userovich",
                 12,
-                roleService.getRoles()));
+                new HashSet<>(roleService.getRoles())));
 
         roleService.addRole(new Role("ROLE_ADMIN"));
         userService.addUser(new User("admin",
-                passwordEncoder.encode("admin"),
+                "admin",
                 "none",
                 11,
-                roleService.getRoles()));
+                new HashSet<>(roleService.getRoles())));
     }
 }

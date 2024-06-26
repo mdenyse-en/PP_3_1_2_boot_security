@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
@@ -17,9 +18,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Transactional
     @Override
@@ -27,9 +34,7 @@ public class UserServiceImp implements UserService {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("User with that username already exist!");
         }
-
-        System.out.println(user.getPassword());
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -65,14 +70,8 @@ public class UserServiceImp implements UserService {
     @Transactional
     @Override
     public void updateUser(User user) {
-        User tmpUser = userRepository.getById(user.getId());
-
-        tmpUser.setUsername(user.getUsername());
-        tmpUser.setAge(user.getAge());
-        tmpUser.setLastname(user.getLastname());
-        tmpUser.setRoles(user.getRoles());
-
-        userRepository.save(tmpUser);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 
     @Override
