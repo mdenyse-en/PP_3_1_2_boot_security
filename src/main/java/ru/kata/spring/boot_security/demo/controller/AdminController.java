@@ -8,6 +8,9 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
@@ -23,8 +26,9 @@ public class AdminController {
     }
 
     @GetMapping(value = "/users")
-    public String getUsers(ModelMap model) {
-        model.addAttribute("list", userService.getUsers());
+    public String getUsers(Principal principal, ModelMap modelMap) {
+        modelMap.addAttribute("list", userService.getUsers());
+        modelMap.addAttribute("cur_user", userService.findUserByName(principal.getName()));
 
         return "usersList";
     }
@@ -45,7 +49,7 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @PostMapping(value = "/delete")
+    @GetMapping(value = "/delete")
     public String addNewUsers(@RequestParam(value = "id") Long id) {
         userService.deleteUserById(id);
 
@@ -54,8 +58,12 @@ public class AdminController {
 
     @GetMapping(value = "/edit")
     public String addEditUsers(@RequestParam(value = "id") Long id, ModelMap modelMap) {
+        System.out.println("HERERERERER");
         modelMap.addAttribute("user", userService.findUserById(id));
         modelMap.addAttribute("allRoles", roleService.getRoles());
+
+//        modelMap.addAttribute("user", new User());
+//        modelMap.addAttribute("allRoles", roleService.getRoles());
 
         return "edit";
     }

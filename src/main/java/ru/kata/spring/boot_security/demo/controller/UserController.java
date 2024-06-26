@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
@@ -25,7 +26,15 @@ public class UserController {
 
     @GetMapping(value = "/user")
     public String showCurrentUser(Principal principal, ModelMap modelMap) {
-        modelMap.addAttribute(userService.findUserByName(principal.getName()));
+        modelMap.addAttribute("user", userService.findUserByName(principal.getName()));
+        modelMap.addAttribute("roles1", userService.findUserByName(principal.getName()).getRoles()
+                .stream()
+                .filter(role -> role.getName().startsWith("ROLE_"))
+                .map(role -> {
+                    role.setName(role.getName().substring(5));
+                    return role.getName();
+                })
+                .collect(Collectors.toSet()));
 
         return "user";
     }
