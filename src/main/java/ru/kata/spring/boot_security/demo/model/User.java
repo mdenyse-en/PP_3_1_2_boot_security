@@ -39,6 +39,7 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.lastname = lastname;
+        this.age = age;
         this.email = email;
         this.roles = roles;
 //        this.enabled = enabled;

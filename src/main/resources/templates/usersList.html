@@ -20,7 +20,7 @@
         <div class="col-10 ps-2">
             <b th:text="${cur_user.email}"/>
             with roles:
-            <text th:each="role: ${cur_user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}+' '"/>
+            <span th:each="role: ${cur_user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}+' '"/>
         </div>
 
         <div class="col pe-2">
@@ -31,9 +31,7 @@
 
 <div class="row mx-0">
     <div class="col-2 p-0">
-        <div
-                class="d-flex flex-column bg-light pt-3 flex-shrink-0"
-        >
+        <div class="d-flex flex-column bg-light pt-3 flex-shrink-0">
             <ul class="nav nav-pills flex-column mb-auto">
                 <div sec:authorize="hasRole('ROLE_USER')">
                     <li class="nav-item">
@@ -86,7 +84,7 @@
                                     <td th:text="${userNext.age}">Age</td>
                                     <td th:text="${userNext.email}">email</td>
                                     <td>
-                                        <text th:each="role: ${userNext.roles}"
+                                        <span th:each="role: ${userNext.roles}"
                                               th:text="${#strings.replace(role.name, 'ROLE_', '')}+' '"/>
                                     </td>
                                     <td>
