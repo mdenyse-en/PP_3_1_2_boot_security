@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -29,15 +28,17 @@ public class AdminController {
     public String getUsers(Principal principal, ModelMap modelMap) {
         modelMap.addAttribute("list", userService.getUsers());
         modelMap.addAttribute("cur_user", userService.findUserByName(principal.getName()));
+        modelMap.addAttribute("allRoles", roleService.getRoles());
 
         return "usersList";
     }
 
     @GetMapping(value = "/add")
-    public String addNewUser(ModelMap modelMap) {
+    public String addNewUser(Principal principal, ModelMap modelMap) {
         User user = new User();
         modelMap.addAttribute("user", user);
-        modelMap.addAttribute("roles", roleService.getRoles());
+        modelMap.addAttribute("cur_user", userService.findUserByName(principal.getName()));
+        modelMap.addAttribute("allRoles", roleService.getRoles());
 
         return "add";
     }
@@ -49,27 +50,15 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    @GetMapping(value = "/delete")
+    @DeleteMapping(value = "/delete")
     public String addNewUsers(@RequestParam(value = "id") Long id) {
         userService.deleteUserById(id);
 
         return "redirect:/admin/users";
     }
 
-    @GetMapping(value = "/edit")
-    public String addEditUsers(@RequestParam(value = "id") Long id, ModelMap modelMap) {
-        System.out.println("HERERERERER");
-        modelMap.addAttribute("user", userService.findUserById(id));
-        modelMap.addAttribute("allRoles", roleService.getRoles());
-
-//        modelMap.addAttribute("user", new User());
-//        modelMap.addAttribute("allRoles", roleService.getRoles());
-
-        return "edit";
-    }
-
-    @PostMapping(value = "/edit")
-    public String editUser(@ModelAttribute("user") User user) {
+    @PatchMapping(value = "/edit")
+    public String editUser(@ModelAttribute("userNext") User user) {
         userService.updateUser(user);
 
         return "redirect:/admin/users";

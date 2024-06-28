@@ -27,6 +27,7 @@ public class DataBaseInitializer {
                 "user",
                 "userovich",
                 12,
+                "user@mail.ru",
                 new HashSet<>(roleService.getRoles())));
 
         roleService.addRole(new Role("ROLE_ADMIN"));
@@ -34,6 +35,7 @@ public class DataBaseInitializer {
                 "admin",
                 "none",
                 11,
+                "admin@google.com",
                 new HashSet<>(roleService.getRoles())));
     }
 }

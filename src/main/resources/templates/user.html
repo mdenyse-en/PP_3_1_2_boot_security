@@ -18,9 +18,9 @@
 <header>
     <nav class="navbar bg-dark text-light p-1">
         <div class="col-10 ps-2">
-            <b th:text="${user.lastname}"/>
+            <b th:text="${user.email}"/>
             with roles:
-                <text th:each="role: ${roles1}" th:text="${role}+' '"/>
+                <text th:each="role: ${user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}+' '"/>
         </div>
 
         <div class="col pe-2">
@@ -102,9 +102,9 @@
                                     <td th:text="${user.username}">Name</td>
                                     <td th:text="${user.lastname}">Last Name</td>
                                     <td th:text="${user.age}">Age</td>
-                                    <td th:text="${user.lastname}">email</td>
+                                    <td th:text="${user.email}">email</td>
                                     <td>
-                                        <text th:each="role: ${roles1}" th:text="${role}+' '"/>
+                                        <text th:each="role: ${user.roles}" th:text="${#strings.replace(role.name, 'ROLE_', '')}+' '"/>
                                     </td>
                                 </tr>
                             </table>
